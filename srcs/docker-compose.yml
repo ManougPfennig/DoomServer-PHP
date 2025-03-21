@@ -1,0 +1,54 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    environment:
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - app-network
+
+  # Symfony Backend
+  symfony:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: symfony
+    volumes:
+      - ./backend/Symfony:/var/www/symfony
+    environment:
+      DATABASE_URL: postgresql://${DB_USER}:${DB_PASSWORD}@db:5432/${DB_NAME}
+    depends_on:
+      - db
+    networks:
+      - app-network
+
+  # Vite-React Frontend
+  vite-react:
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile
+    container_name: vite_react
+    volumes:
+      - ./frontend/React:/app
+      - /app/node_modules
+    ports:
+      - "5173:5173"  # Expose Vite dev server port
+    environment:
+      VITE_API_BASE_URL: http://symfony:9000  # Symfony backend URL
+    networks:
+      - app-network
+
+# Docker volumes and networks
+volumes:
+  postgres_data:
+
+networks:
+  app-network:
+    driver: bridge
