@@ -7,7 +7,7 @@ The term 'Doom' is there because the **frontend uses a rendering technique calle
 
 ![raycasting exemple.](https://upload.wikimedia.org/wikipedia/commons/e/e7/Simple_raycasting_with_fisheye_correction.gif)
 
-Maybe you expected an actual *Doom Server* made to take over the world ? ~I wish~ Don't trust me, it's still a lot of fun.
+Maybe you expected an actual *Doom Server* made to take over the world ? ~I wish~ Don't worry, it's still a lot of fun.
 <br/><br/>
 
 ### 2. How to setup the server
