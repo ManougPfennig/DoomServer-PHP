@@ -1,4 +1,5 @@
 # DOOM SERVER - PHP
+### *(Currently a work in progress, there is no game yet)*
 ### 1. Sounds metal, right ?
 
 Well, really it's nothing more than a **web application made to walk around a 3D multiplayer map**.
@@ -19,4 +20,3 @@ Maybe you expected an actual *Doom Server* made to take over the world ? ~I wish
 ```cd DoomServer-PHP```
 - Start the application with docker compose using the provided Makefile\
 ```sudo make``` or ```sudo make hide``` to hide logs
-- Currently a work in progress, there is no game yet
