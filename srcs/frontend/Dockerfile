@@ -4,7 +4,9 @@ FROM node:18
 # Set working directory
 WORKDIR /app
 
+
 # Copy package.json and install dependencies
+RUN npm install -g latest-version
 COPY frontend/React/package.json frontend/React/package-lock.json ./
 RUN npm install
 
