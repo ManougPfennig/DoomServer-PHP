@@ -15,4 +15,8 @@ Maybe you expected an actual *Doom Server* made to take over the world ? ~I wish
 
 - Clone the repository\
 ```git clone https://github.com/ManougPfennig/DoomServer-PHP```
-- This project is a work in progress 
+- Go inside the repository\
+```cd DoomServer-PHP```
+- Start the application with docker compose using the provided Makefile\
+```sudo make``` or ```sudo make hide``` to hide logs
+- Currently a work in progress, there is no game yet
