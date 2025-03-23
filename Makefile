@@ -1,7 +1,7 @@
 DOCKER_COMPOSE_FILE=srcs/docker-compose.yml
 
 all:
-	docker compose -f $(DOCKER_COMPOSE_FILE) up --build -d
+	docker compose -f $(DOCKER_COMPOSE_FILE) up --build
 
 down:
 	docker compose -f $(DOCKER_COMPOSE_FILE) down
@@ -12,8 +12,8 @@ clean:
 prune:
 	docker system prune -af --volumes
 
-logs:
-	docker compose -f $(DOCKER_COMPOSE_FILE) up --build
+hide:
+	docker compose -f $(DOCKER_COMPOSE_FILE) up --build -d
 
 ps:
 	docker compose -f $(DOCKER_COMPOSE_FILE) ps
