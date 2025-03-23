@@ -2,6 +2,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './Home.module.css';
+import gun from '../../assets/Gun.gif';
+import gunShooting from '../../assets/GunShooting.gif';
 
 function Home()
 {
@@ -9,11 +11,14 @@ function Home()
 		section1: false,
 		section2: false,
 		section3: false,
+		section4: false,
 	});
 	
 	const section1Ref = useRef(null);
 	const section2Ref = useRef(null);
 	const section3Ref = useRef(null);
+	const section4Ref = useRef(null);
+
 	const defaultBgColor = "#242424";
 	const hoverBgColor = "#361212";
 
@@ -45,6 +50,14 @@ function Home()
 				setVisibleSections(prev => ({
 					...prev,
 					section3: scrollPosition > section3Position + 100
+				}));
+			}
+
+			if (section4Ref.current) {
+				const section4Position = section4Ref.current.offsetTop;
+				setVisibleSections(prev => ({
+					...prev,
+					section4: scrollPosition > section4Position + 100
 				}));
 			}
 		};
@@ -98,18 +111,33 @@ function Home()
 				</div>
 			</div>
 
-			<div ref={section2Ref} className={visibleSections.section2 ? styles.visible : styles.hidden}>
+			<div ref={section3Ref} className={visibleSections.section3 ? styles.visible : styles.hidden}>
 				<p>The point of Doom Server was learning <b>how to use the Symfony framework as a student developer</b>.</p>
-				<p>Also, <b>PHP is a language used by 75% of websites</b> on the internet, it's a good one to know.</p>
+				<p>Also, <b>PHP is a language used by 77.5% of websites</b> on the internet, it's a good one to know.</p>
 			</div>
 
-			<div ref={section3Ref} className={visibleSections.section3 ? styles.visible : styles.hidden}>
+			<div ref={section4Ref} className={visibleSections.section4 ? styles.visible : styles.hidden}>
 				<p>But i'm sure you're more interested in actually playing the game</p>
 				<button	onClick={() => JoinGame()}
 						onMouseEnter={() => setIsHovered(true)}
 						onMouseLeave={() => setIsHovered(false)}
-						>JOIN GAME
+				>
+					<img	src={isHovered ? gunShooting : gun}
+							alt="cool picture of a gun"
+					/>
+					<p><b>START</b></p>
 				</button>
+			</div>
+
+			<div ref={section2Ref} className={visibleSections.section2 ? styles.visible : styles.hidden}>
+				<p>Links to my <b>socials</b> :</p>
+				<div className={styles.rows}>
+					<a href="https://github.com/ManougPfennig" target="_blank">
+					<img	src="https://img.icons8.com/m_outlined/512/FFFFFF/github.png"
+							alt="Github logo"
+					/></a>
+				</div>
+				<p>- Manoug</p>
 			</div>
 
 		</div>
