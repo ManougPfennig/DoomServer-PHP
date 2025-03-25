@@ -1,0 +1,46 @@
+.centered_container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+}
+
+.canvas_container {
+	margin-top: 5vh;
+	border: 5px solid hsl(0, 0%, 87%);
+	transition: width .5s ease, height .5s ease, top .5s ease, left .5s ease;
+}
+.canvas_container canvas {
+	transition: width .5s ease, height .5s ease, top .5s ease, left .5s ease;
+}
+
+.rows {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-items: center;
+}
+
+.button_rows {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-items: center;
+	margin-top: 5vh;
+	height: 8vh;
+	font-size: 3vh;
+}
+.button_rows button {
+	border: none;
+	margin: 0px;
+	height: 5vh;
+	width: 5vh;
+	font-size: 3vh;
+	font-weight: bold;
+	color: rgba(255, 255, 255, 0.87);
+	background-color: transparent;
+	transition: font-size 0.2s ease;
+}
+.button_rows button:hover {
+	font-size: 3.5vh;
+}

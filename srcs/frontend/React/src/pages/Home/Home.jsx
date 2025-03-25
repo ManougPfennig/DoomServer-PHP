@@ -1,6 +1,5 @@
-// Home.jsx
-
 import React, { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom'
 import styles from './Home.module.css';
 import gun from '../../assets/Gun.gif';
 import gunShooting from '../../assets/GunShooting.gif';
@@ -23,6 +22,7 @@ function Home()
 	const hoverBgColor = "#361212";
 
 	const [isHovered, setIsHovered] = useState(false);
+	const navigate = useNavigate();
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -85,7 +85,8 @@ function Home()
 	}, [isHovered]);
 
 	const JoinGame = () => {
-		console.log("CLikced");
+		document.body.style.backgroundColor = "#ff0000"
+		navigate('/Doom');
 	}
 
 	return (
@@ -111,12 +112,12 @@ function Home()
 				</div>
 			</div>
 
-			<div ref={section3Ref} className={visibleSections.section3 ? styles.visible : styles.hidden}>
+			<div ref={section2Ref} className={visibleSections.section2 ? styles.visible : styles.hidden}>
 				<p>The point of Doom Server was learning <b>how to use the Symfony framework as a student developer</b>.</p>
 				<p>Also, <b>PHP is a language used by 77.5% of websites</b> on the internet, it's a good one to know.</p>
 			</div>
 
-			<div ref={section4Ref} className={visibleSections.section4 ? styles.visible : styles.hidden}>
+			<div ref={section3Ref} className={visibleSections.section3 ? styles.visible : styles.hidden}>
 				<p>But i'm sure you're more interested in actually playing the game</p>
 				<button	onClick={() => JoinGame()}
 						onMouseEnter={() => setIsHovered(true)}
@@ -125,12 +126,11 @@ function Home()
 					<img	src={isHovered ? gunShooting : gun}
 							alt="cool picture of a gun"
 					/>
-					<p><b>START</b></p>
+					<p>START</p>
 				</button>
 			</div>
 
-			<div ref={section2Ref} className={visibleSections.section2 ? styles.visible : styles.hidden}>
-				<p>Links to my <b>socials</b> :</p>
+			<div ref={section4Ref} className={visibleSections.section4 ? styles.visible : styles.hidden}>
 				<div className={styles.rows}>
 					<a href="https://github.com/ManougPfennig" target="_blank">
 					<img	src="https://img.icons8.com/m_outlined/512/FFFFFF/github.png"
