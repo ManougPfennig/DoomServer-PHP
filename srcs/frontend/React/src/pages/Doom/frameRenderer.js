@@ -52,7 +52,7 @@ class FrameRenderer {
 	// Resize the renderer
 	resize(width, height) {
 		if (this.width == width && this.height == height)
-			return (0); // No resize
+			return ; // No need to resize
 
 		this.width = width;
 		this.height = height;
@@ -61,8 +61,6 @@ class FrameRenderer {
 		this.frameBuffer = this.ctx.createImageData(width, height);
 		this.frameData = this.frameBuffer.data;
 		this.bufferSize = width * height * 4;
-		this.clear();
-		return (1); // Resized
 	}
 	
 	// Draw a filled rectangle
@@ -83,7 +81,7 @@ class FrameRenderer {
 		x = Math.floor(x);
 		y1 = Math.floor(y1);
 		y2 = Math.floor(y2);
-		let dir = (y1 >= y2 ? -1 : 1);
+		const dir = (y1 >= y2 ? -1 : 1);
 		
 		this.setPixel(x, y1, r, g, b, a);
 		while (y1 != y2) {

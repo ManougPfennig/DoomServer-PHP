@@ -2,61 +2,129 @@ import React, { useRef, useState, useEffect } from 'react'
 import FrameRenderer from './frameRenderer.js'
 import raycaster from './raycaster.js'
 import styles from './Doom.module.css'
+import { moveLeft, moveRight, moveForward, moveBackward, rotateLeft, rotateRight } from './playerMovement.js'
+import { handleKeyDown, handleKeyUp } from './inputEvent.js'
 
 function Doom() {
 
 	// Display
 	const	[displayHeight, setDisplayHeight] = useState(500);
 	const	[displayWidth, setDisplayWidth] = useState(800);
+	const	[displayFPS, setDisplayFPS] = useState(0);
 	const	height = useRef(500);
 	const	width = useRef(800);
 	const	canvasRef = useRef(null);
+	const	keys = useRef({
+		forward: false,
+		left: false,
+		right: false,
+		backward: false,
+		turnL: false,
+		turnR: false,
+	});
 	
 	// Raycaster
 	const	player = useRef({
 		// Player POV
-		posX: 3, posY: 3,
-		dirX: -1, dirY: -1,
+		posX: 3, posY: 6,
+		dirX: -1, dirY: 0,
 		planeX: 0, planeY: 0.66,
-		// Speed modifiers
-		moveSpeed: (25 / 1000) * 5.0, // The constant value is in squares/second
-		rotSpeed: (25 / 1000) * 3.0, // The constant value is in radians/second
+		mouseY: 0,
 	});
+
+	// Speed modifiers
+	const moveSpeed = (61 / 1000) * 2.0; // The constant value is in squares/second
+	const rotSpeed = (61 / 1000) * 0.1; // The constant value is in radians/second
 	
 	// Game elements
 	const	joined = useRef(false);
-	const	map = useRef([	"111111111111111111",
-							"100000000000000001",
-							"100000000000000001",
-							"110100000000000001",
-							"100000000000000001",
-							"100000000000000001",
-							"111111111111111111",
-						]); // Game map
+	const	map = [	"111111111111111111",
+					"100000001000000001",
+					"100000000000000001",
+					"110000000000000011",
+					"100000000000000001",
+					"100000001100000001",
+					"111111111111111111",
+				]; // Game map
+
+	useEffect(() => {
+
+		// Key down event handler
+		const keyDownEvent = (event) => {handleKeyDown(event, keys)}
+		// Key up event handler
+		const keyUpEvent = (event) => {handleKeyUp(event, keys)}
+		// Mouse event handler
+		const handleMouse = (event) => {
+
+			if (joined.current == false) return;
+
+			// Listens for MouseMove event
+			let rot = Math.abs(event.movementX) * rotSpeed;
+			player.current.mouseY -= event.movementY * 2;
+		
+			if (event.movementX > 0) rotateRight(player, rot);
+			else if (event.movementX < 0) rotateLeft(player, rot);
+		};
+
+		// Adding event listeners on mount
+		window.addEventListener('keydown', keyDownEvent);
+		window.addEventListener('keyup', keyUpEvent);
+		window.addEventListener('mousemove', handleMouse);
+		return () => {
+			// Removing event listeners on dismount
+			window.removeEventListener('keydown', keyDownEvent);
+			window.removeEventListener('keyup', keyUpEvent);
+			window.removeEventListener('mousemove', handleMouse);
+		};
+	}, []);
+
+	const handleMovement = () => {
+
+		if (keys.current.forward) moveForward(player, map, moveSpeed);
+		if (keys.current.backward) moveBackward(player, map, moveSpeed);
+		if (keys.current.left) moveLeft(player, map, moveSpeed);
+		if (keys.current.right) moveRight(player, map, moveSpeed);
+		if (keys.current.turnL) rotateLeft(player);
+		if (keys.current.turnR) rotateRight(player);
+	}
 
 	const runGameLoop = () => {
 		const	renderer = new FrameRenderer(canvasRef.current, width.current, height.current);
 		let		lastUpdate = Date.now();
+		let		counterFPS = Date.now()
+		let		frames = 0;
 
 		const gameLoop = () => {
 			const time = Date.now();
+			const h = height.current;
+			const w = width.current;
+
+			if (time - counterFPS > 1000) {
+				counterFPS = time;
+				setDisplayFPS(frames);
+				frames = 0;
+			}
 
 			// Max update per seconds
-			if (time - lastUpdate > 1000 / 61) {
-
-				// Clear frame with a background color
-				if (renderer.resize(width.current, height.current) == 0) // Size update
-					renderer.clear(0, 0, 0, 255); // Black background
-
-				// Process raycaster logic
-				raycaster(renderer, player.current, map.current);
-				
-				// Display the rendered frame
-				renderer.render();
-				
+			if (time - lastUpdate > 1000 / 60) {
 				// Update timestamp
+				handleMovement();
 				lastUpdate = time;
 			}
+			// Clear frame with a background color
+			const offset = player.current.mouseY;
+			renderer.resize(w, h) // Size update
+			renderer.fillRect(0, 0, w, (h / 2) + offset, 64, 4, 0, 255); // Draw sky
+			renderer.fillRect(0, (h / 2) + offset, w, h, 46, 34, 34, 255); // Draw floor
+
+			// Process raycaster logic
+			raycaster(renderer, player.current, map);
+			
+			// Display the rendered frame
+			renderer.render();
+			
+			// Update FPS
+			frames++;
 			// Schedule next frame
 			requestAnimationFrame(gameLoop);
 		}
@@ -83,28 +151,6 @@ function Doom() {
 	const updateHeight = (newHeight) => {
 		setDisplayHeight(newHeight);
 		height.current = newHeight;
-	}
-
-	const rotateLeft = () => {
-		let p = player.current;
-		let oldDirX = p.dirX;
-
-		p.dirX = p.dirX * Math.cos(p.rotSpeed) - p.dirY * Math.sin(p.rotSpeed);
-		p.dirY = oldDirX * Math.sin(p.rotSpeed) + p.dirY * Math.cos(p.rotSpeed);
-		let oldPlaneX = p.planeX;
-		p.planeX = p.planeX * Math.cos(p.rotSpeed) - p.planeY * Math.sin(p.rotSpeed);
-		p.planeY = oldPlaneX * Math.sin(p.rotSpeed) + p.planeY * Math.cos(p.rotSpeed);
-	}
-
-	const rotateRight = () => {
-		let p = player.current;
-		// Both camera direction and camera plane must be rotated
-		let oldDirX = p.dirX;
-		p.dirX = p.dirX * Math.cos(-p.rotSpeed) - p.dirY * Math.sin(-p.rotSpeed);
-		p.dirY = oldDirX * Math.sin(-p.rotSpeed) + p.dirY * Math.cos(-p.rotSpeed);
-		let oldPlaneX = p.planeX;
-		p.planeX = p.planeX * Math.cos(-p.rotSpeed) - p.planeY * Math.sin(-p.rotSpeed);
-		p.planeY = oldPlaneX * Math.sin(-p.rotSpeed) + p.planeY * Math.cos(-p.rotSpeed);
 	}
 
 	return (
@@ -136,12 +182,8 @@ function Doom() {
 						height={displayHeight}
 						onClick={() => joinGame()}/>
 			</div>
+			<p>{displayFPS} fps</p>
 
-			<div className={styles.button_rows}>
-				<button onClick={() => rotateLeft()}>LEFT</button>
-				<button onClick={() => rotateLeft()}>LEFT</button>
-				<button onClick={() => rotateRight()}>RIGHT</button>
-			</div>
 		</div>
 	);
 }

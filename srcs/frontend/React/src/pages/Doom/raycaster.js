@@ -4,9 +4,9 @@ function raycaster(r, p, map)
 	let w = r.width;
 	let h = r.height;
 
-	let posX = p.posX, posY = p.posY;
-	let dirX = p.dirX, dirY = p.dirY;
-	let planeX = p.planeX, planeY = p.planeY;
+	const posX = p.posX, posY = p.posY;
+	const dirX = p.dirX, dirY = p.dirY;
+	const planeX = p.planeX, planeY = p.planeY;
 
 	for (let x = 0; x < w; x++)
 	{
@@ -20,12 +20,12 @@ function raycaster(r, p, map)
 		let mapY = Math.floor(posY);
 
 		// Length of ray from current position to next x or y-side
-		let sideDistX;
-		let sideDistY;
+		let sideDistX = 0;
+		let sideDistY = 0;
 
 		// Length of ray from one x or y-side to next x or y-side
-		let deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
-		let deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
+		const deltaDistX = (rayDirX == 0) ? 1e30 : Math.abs(1 / rayDirX);
+		const deltaDistY = (rayDirY == 0) ? 1e30 : Math.abs(1 / rayDirY);
 		let perpWallDist;
 
 		// What direction to step in x or y-direction (either +1 or -1)
@@ -78,23 +78,27 @@ function raycaster(r, p, map)
 			perpWallDist = (sideDistY - deltaDistY);
 
 		// Calculate height of line to draw on screen
-		let lineHeight = Math.floor(h / perpWallDist);
+		const lineHeight = Math.floor(h / perpWallDist);
+		const offset = p.mouseY;
 
 		// Calculate lowest and highest pixel to fill in current stripe
-		let drawStart = -lineHeight / 2 + h / 2;
+		let drawStart = (-lineHeight / 2 + h / 2) + offset;
 		if (drawStart < 0)
 			drawStart = 0;
-		let drawEnd = lineHeight / 2 + h / 2;
+		let drawEnd = (lineHeight / 2 + h / 2) + offset;
 		if (drawEnd >= h)
 			drawEnd = h - 1;
 
 		// Choose wall color
 
 		// Give depth with different brightness
-		let shade = Math.abs(((perpWallDist / 20) * 255) - 255);
+		let color = Math.abs(((perpWallDist / 20) * 255) - 255);
+		// Give x and y sides different brightness
+		if (side == 1)
+			color = color / 2;
 
-		//draw the pixels of the stripe as a vertical line
-		r.verticalLine(x, drawStart, drawEnd, shade, shade, shade, 255);
+		// Draw the pixels of the stripe as a vertical line
+		r.verticalLine(x, drawStart, drawEnd, color, color, color, 255);
 	}
 }
 
