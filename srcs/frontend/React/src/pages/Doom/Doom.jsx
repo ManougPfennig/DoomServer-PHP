@@ -38,14 +38,38 @@ function Doom() {
 	
 	// Game elements
 	const	joined = useRef(false);
-	const	map = [	"111111111111111111",
-					"100000001000000001",
-					"100000000000000001",
-					"110000000000000011",
-					"100000000000000001",
-					"100000001100000001",
-					"111111111111111111",
-				]; // Game map
+	const	map = [
+		"111111111111111111111111111111",
+		"100000000000000000000000000001",
+		"100000000000000000000000000001",
+		"110000000000000000000000000011",
+		"100000000000000000000000000001",
+		"100000000110000000000000000001",
+		"100000000000000000000000000001",
+		"100000000000000000000000000001",
+		"100000000000000000000000000001",
+		"100000000000001000000000000001",
+		"110000000000001000000000000011",
+		"111000000000001000000000000111",
+		"100100000000001000000000100001",
+		"100000000000001000000000100001",
+		"100100000000001000000000100001",
+		"110100000000001000000000000011",
+		"111100000000000000000000111101",
+		"100100000000000000000000000001",
+		"100100000000000000000000100001",
+		"100100000000000000000000100001",
+		"100000000000000000000000100001",
+		"100100000000000000000000100001",
+		"110100000000001000000000100011",
+		"111100000000000000000000111111",
+		"100000000000000000000000000001",
+		"100000000000000000000000000001",
+		"110000000000000000000000000011",
+		"111000000000000000000000000111",
+		"100000000000000000000000000001",
+		"111111111111111111111111111111"
+	]; // Game map
 
 	useEffect(() => {
 
@@ -80,10 +104,11 @@ function Doom() {
 
 	const handleMovement = () => {
 
-		if (keys.current.forward) moveForward(player, map, moveSpeed);
-		if (keys.current.backward) moveBackward(player, map, moveSpeed);
-		if (keys.current.left) moveLeft(player, map, moveSpeed);
-		if (keys.current.right) moveRight(player, map, moveSpeed);
+
+		if (keys.current.forward && !keys.current.backward) moveForward(player, map, moveSpeed);
+		if (keys.current.backward && !keys.current.forward) moveBackward(player, map, moveSpeed);
+		if (keys.current.left && !keys.current.right) moveLeft(player, map, moveSpeed);
+		if (keys.current.right && !keys.current.left) moveRight(player, map, moveSpeed);
 		if (keys.current.turnL) rotateLeft(player);
 		if (keys.current.turnR) rotateRight(player);
 	}
@@ -114,8 +139,8 @@ function Doom() {
 			// Clear frame with a background color
 			const offset = player.current.mouseY;
 			renderer.resize(w, h) // Size update
-			renderer.fillRect(0, 0, w, (h / 2) + offset, 64, 4, 0, 255); // Draw sky
-			renderer.fillRect(0, (h / 2) + offset, w, h, 46, 34, 34, 255); // Draw floor
+			renderer.fillZone(0, 0, w, (h / 2) + offset, 64, 4, 0, 255); // Draw sky
+			renderer.fillZone(0, (h / 2) + offset, w, h, 92, 68, 68, 255); // Draw floor
 
 			// Process raycaster logic
 			raycaster(renderer, player.current, map);

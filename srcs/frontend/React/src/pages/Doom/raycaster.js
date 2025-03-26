@@ -92,7 +92,7 @@ function raycaster(r, p, map)
 		// Choose wall color
 
 		// Give depth with different brightness
-		let color = Math.abs(((perpWallDist / 20) * 255) - 255);
+		let color = Math.abs(((perpWallDist / 50) * 255) - 255);
 		// Give x and y sides different brightness
 		if (side == 1)
 			color = color / 2;

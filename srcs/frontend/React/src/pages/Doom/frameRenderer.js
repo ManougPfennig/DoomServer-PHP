@@ -76,7 +76,22 @@ class FrameRenderer {
 			}
 		}
 	}
+
+	// Fill a zone of the buffer
+	fillZone(x1, y1, x2, y2, r, g, b, a = 255) { 
+		x1 = Math.max(0, Math.floor(x1));
+		y1 = Math.max(0, Math.floor(y1));
+		x2 = Math.max(this.width - 1, Math.floor(x2));
+		y2 = Math.max(this.height - 1, Math.floor(y2));
+		
+		for (let cy = y1; cy <= y2; cy++) {
+			for (let cx = x1; cx <= x2; cx++) {
+				this.setPixel(cx, cy, r, g, b, a);
+			}
+		}
+	}
 	
+	// Draw a vertical line
 	verticalLine(x, y1, y2, r, g, b, a = 255) {
 		x = Math.floor(x);
 		y1 = Math.floor(y1);
