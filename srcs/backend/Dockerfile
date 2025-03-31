@@ -1,5 +1,7 @@
 FROM php:8.2-fpm
 
+ENV COMPOSER_ALLOW_SUPERUSER=1
+
 # Installing dependencies
 RUN apt-get update && apt-get install -y \
     git \

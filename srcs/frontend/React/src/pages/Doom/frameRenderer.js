@@ -77,7 +77,7 @@ class FrameRenderer {
 		}
 	}
 
-	// Fill a zone of the buffer
+	// Fill a zone of the image
 	fillZone(x1, y1, x2, y2, r, g, b, a = 255) { 
 		x1 = Math.max(0, Math.floor(x1));
 		y1 = Math.max(0, Math.floor(y1));
@@ -133,6 +133,42 @@ class FrameRenderer {
 				if (y1 === y2) break;
 				err += dx;
 				y1 += sy;
+			}
+		}
+	}
+
+	drawTexturedline(texture, texX, x, drawStart, drawEnd, lineHeight) {
+		// For readability
+		const texHeight = texture.size.height;
+		const texWidth = texture.size.width;
+		const a = texture.rgbaArray;
+	
+		// Ensure texX is within bounds
+		texX = Math.max(0, Math.min(texX, texWidth - 1));
+	
+		// How much to increase the texture coordinate per screen pixel
+		const step = texHeight / lineHeight;
+	
+		// Starting texture coordinate - adjusted for precise mapping
+		let texPos = (drawStart - this.height / 2 + lineHeight / 2) * step;
+		
+		// Add a very small offset to avoid floating point precision issues
+		texPos = Math.max(0, texPos + 0.0001);
+	
+		for (let y = Math.floor(drawStart); y < Math.ceil(drawEnd); y++) {
+			// Ensure y is within screen bounds
+			// if (y < 0 || y >= this.height) continue;
+			
+			// Calculate texY ensuring it's within bounds
+			const texY = Math.floor(texPos) % texHeight;
+			texPos += step;
+			
+			// Calculate the pixel position in the rgba array (4 bytes per pixel)
+			const p = 4 * (texY * texWidth + texX);
+			
+			// Ensure we're not accessing outside the array
+			if (p >= 0 && p + 3 < a.length) {
+				this.setPixel(x, y, a[p], a[p + 1], a[p + 2], a[p + 3]);
 			}
 		}
 	}

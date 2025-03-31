@@ -14,7 +14,7 @@ function Doom() {
 	const	[resolution, setResolution] = useState(1);
 	const	[displayFPS, setDisplayFPS] = useState(0);
 	const	[isLoading, setIsLoading] = useState(false);
-	const	[textures, setTextures] = useState(null);
+	const	textures = useRef(null);
 	const	height = useRef(500);
 	const	width = useRef(800);
 	const	canvasRef = useRef(null);
@@ -132,7 +132,7 @@ function Doom() {
 			renderer.fillZone(0, (h / 2) + offset, w, h, 92, 68, 68, 255); // Draw floor
 
 			// Render frame with raycasting logic
-			raycaster(renderer, player.current, map);
+			raycaster(renderer, player.current, map, textures.current);
 
 			// Set the rendered frame to the canvas for display
 			renderer.render();
@@ -153,13 +153,14 @@ function Doom() {
 		if (joined.current == false) {
 			setIsLoading(true);
 			
-			// Initialize textures and run game loop
+			// Initialize textures then run game loop
 			initializeTextures()
 				.then(loadedTextures => {
-					setTextures(loadedTextures);
+					textures.current = loadedTextures;
 					runGameLoop();
 					joined.current = true;
 					setIsLoading(false);
+					console.table(loadedTextures);
 				})
 				.catch(error => {
 					console.error("Failed to initialize texture:", error);

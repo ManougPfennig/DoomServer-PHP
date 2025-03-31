@@ -55,13 +55,7 @@ function loadTextures() {
 
 	return Promise.all(texturePromises)
 		.then(textures => {
-			// Store textures in a convenient format for the raycaster
-			const textureMap = {
-				wall1: textures[0].rgbaArray,
-				wall2: textures[1].rgbaArray,
-				// Map more textures as needed
-			};
-			return textureMap;
+			return textures;
 		}
 	);
 }
