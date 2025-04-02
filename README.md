@@ -1,5 +1,5 @@
 # DOOM SERVER - PHP
-### *(Currently a work in progress, there is no game yet)*
+### *(Currently a work in progress, there is no multiplayer yet)*
 ### 1. Sounds metal, right ?
 
 Well, really it's nothing more than a **web application made to walk around a 3D multiplayer map**.
