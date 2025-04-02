@@ -15,6 +15,12 @@ export const handleKeyDown = (event, keys) => {
 		case 'd':
 			keys.current.right = true;
 			break;
+		case 'ArrowLeft':
+			keys.current.turnL = true;
+			break;
+		case 'ArrowRight':
+			keys.current.turnR = true;
+			break;
 	}
 };
 
@@ -34,6 +40,12 @@ export const handleKeyUp = (event, keys) => {
 			break;
 		case 'd':
 			keys.current.right = false;
+			break;
+		case 'ArrowLeft':
+			keys.current.turnL = false;
+			break;
+		case 'ArrowRight':
+			keys.current.turnR = false;
 			break;
 	}
 };
