@@ -1,4 +1,5 @@
 import smile from "../../assets/smile.png"
+import brickWall from "../../assets/brickWall.jpg"
 
 function convertImageToRGBAArray(imageSrc) {
 
@@ -49,7 +50,7 @@ function convertImageToRGBAArray(imageSrc) {
 function loadTextures() {
 	const texturePromises = [
 		convertImageToRGBAArray(smile),
-		convertImageToRGBAArray(smile),
+		convertImageToRGBAArray(brickWall),
 		// Add more textures as needed
 	];
 

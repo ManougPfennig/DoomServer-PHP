@@ -1,8 +1,8 @@
 
 function raycaster(r, p, map, textures)
 {
-	let w = r.width;
-	let h = r.height;
+	const w = r.width;
+	const h = r.height;
 
 	const posX = p.posX, posY = p.posY;
 	const dirX = p.dirX, dirY = p.dirY;
@@ -71,7 +71,7 @@ function raycaster(r, p, map, textures)
 			if (map[mapX][mapY] > 0) hit = 1;
 		}
 
-		// Calculate distance projected on camera direction (Euclidean distance would give fisheye effect!)
+		// Calculate distance projected on camera direction (Euclidean distance would give fisheye effect)
 		if (side == 0)
 			perpWallDist = (sideDistX - deltaDistX);
 		else
@@ -79,21 +79,14 @@ function raycaster(r, p, map, textures)
 
 		// Calculate height of line to draw on screen
 		const lineHeight = Math.floor(h / perpWallDist);
-		const offset = p.mouseY;
 
 		// Calculate lowest and highest pixel to fill in current stripe
-		let drawStart = (-lineHeight / 2 + h / 2) + offset;
-		if (drawStart < 0)
-			drawStart = 0;
-		let drawEnd = (lineHeight / 2 + h / 2) + offset;
-		if (drawEnd >= h)
-			drawEnd = h - 1;
-
-
+		const drawStart = Math.floor((-lineHeight / 2) + (h / 2));
+		const drawEnd = Math.ceil((lineHeight / 2) + (h / 2));
 
 		// Texturing calculations
 		// const texNum = worldMap[mapX][mapY] - 1; // 1 subtracted from it so that texture 0 can be used
-		const texNum = 0;
+		const texNum = 1;
 		const texWidth = textures[texNum].size.width;
 
 		// Calculate value of wallX
@@ -111,7 +104,7 @@ function raycaster(r, p, map, textures)
 		if (side == 1 && rayDirY < 0)
 			texX = texWidth - texX - 1;
 
-		r.drawTexturedline(textures[texNum], texX, x, drawStart, drawEnd, lineHeight)
+		r.drawTexturedline(textures[texNum], texX, x, drawStart, drawEnd, lineHeight, p.mouseY);
 	}
 	return ;
 }

@@ -137,7 +137,7 @@ class FrameRenderer {
 		}
 	}
 
-	drawTexturedline(texture, texX, x, drawStart, drawEnd, lineHeight) {
+	drawTexturedline(texture, texX, x, drawStart, drawEnd, lineHeight, offset) {
 		// For readability
 		const texHeight = texture.size.height;
 		const texWidth = texture.size.width;
@@ -148,17 +148,23 @@ class FrameRenderer {
 	
 		// How much to increase the texture coordinate per screen pixel
 		const step = texHeight / lineHeight;
-	
-		// Starting texture coordinate - adjusted for precise mapping
+
+		// Starting texture coordinate, adjusted for precise mapping
 		let texPos = (drawStart - this.height / 2 + lineHeight / 2) * step;
-		
-		// Add a very small offset to avoid floating point precision issues
-		texPos = Math.max(0, texPos + 0.0001);
-	
-		for (let y = Math.floor(drawStart); y < Math.ceil(drawEnd); y++) {
-			// Ensure y is within screen bounds
-			// if (y < 0 || y >= this.height) continue;
-			
+
+		// Add Y offset depending on the player's eyeline
+		drawStart += offset;
+		drawEnd += offset;
+
+		// Displace the texPos if the texture starts outside the display
+		if (drawStart < 0)
+			texPos += step * Math.abs(drawStart);
+
+		const startY = Math.max(0, drawStart);
+		const endY = Math.min(this.height, drawEnd);
+
+		for (let y = startY; y < endY; y++) {
+
 			// Calculate texY ensuring it's within bounds
 			const texY = Math.floor(texPos) % texHeight;
 			texPos += step;
